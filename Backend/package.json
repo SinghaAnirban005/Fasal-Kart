@@ -1,0 +1,20 @@
+{
+  "name": "fasal-kart",
+  "version": "1.0.0",
+  "description": "Marketplace for farmers ",
+  "main": "index.js",
+  "scripts": {
+    "test": "node javascript"
+  },
+  "keywords": [
+    "fasal-kart"
+  ],
+  "author": "Bit Lords",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.0"
+  }
+}
