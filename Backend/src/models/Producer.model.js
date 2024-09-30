@@ -40,7 +40,7 @@ const producerSchema = new Schema({
     Stock: [
         {
             type: Schema.Types.ObjectId,
-            ref: '',
+            ref: "Product",
         }
     ],
 
@@ -52,12 +52,11 @@ const producerSchema = new Schema({
     Reels: [
         {
             type: Schema.Types.ObjectId,
-            ref: '',
+            ref: "",
         }
     ],
     
 }, 
-
 {
     timestamps: true
 })

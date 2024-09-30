@@ -33,7 +33,7 @@ const consumerSchema = new Schema({
     Cart: [
         {
             type: Schema.Types.ObjectId,
-            ref: ""
+            ref: "Product"
         }
     ],
 
@@ -47,15 +47,22 @@ const consumerSchema = new Schema({
     itemsBought: [
         {
             type: Schema.Types.ObjectId,
-            ref: ''
+            ref: 'Order'
         }
     ],
 
-}, 
+    Transactions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Transaction"
+        }
+    ]
 
+}, 
 {
     timestamps: true
-})
+}
+)
 
 
 export const Consumer = mongoose.model("Consumer", consumerSchema)
