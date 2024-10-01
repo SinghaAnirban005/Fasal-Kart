@@ -7,14 +7,8 @@ dotenv.config({
 
 connectDB()
 .then(() => {
-    app.listen(process.env.PORT || 4000, () => {
+    app.listen(process.env.PORT || 3058, () => {
         console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
-    })
-
-    app.get('/', (req, res) => {
-        res.json({
-            'name': "anirban"
-        })
     })
 })
 .catch((err) => {
