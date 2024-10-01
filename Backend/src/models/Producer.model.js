@@ -55,6 +55,26 @@ const producerSchema = new Schema({
             ref: "",
         }
     ],
+
+    aadhaarNumber: {
+        type: Number,
+        unique: true,
+        trim: true,
+        required: true,
+        index: true,
+        minLength: 12,
+        maxLength: 12
+    },
+
+    landDetails: {
+        type: Schema.Types.ObjectId,
+        ref: "Land"
+    },
+
+    cardDetails: {
+        type: Schema.Types.ObjectId,
+        ref: "KisanCard"
+    }
     
 }, 
 {
