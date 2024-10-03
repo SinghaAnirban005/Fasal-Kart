@@ -26,10 +26,10 @@ const landSchema = new Schema({
         enum: ['Agricultural', 'Non-Agricultural'],
         required: true,
         default: "Agricultural" // Need to think more on this
-    }
+    },
 
     landDcouments: {
-        type: String // we shall upload cloudinary url
+        type: String, // we shall upload cloudinary url
         required: true
     }
 

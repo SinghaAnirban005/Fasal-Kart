@@ -52,7 +52,7 @@ const producerSchema = new Schema({
     Reels: [
         {
             type: Schema.Types.ObjectId,
-            ref: "",
+            ref: "Video",
         }
     ],
 
