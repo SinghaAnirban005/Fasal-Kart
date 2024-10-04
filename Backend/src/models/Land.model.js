@@ -31,6 +31,11 @@ const landSchema = new Schema({
     landDcouments: {
         type: String, // we shall upload cloudinary url
         required: true
+    },
+
+    verifiedStatus: {
+        type: Boolean,
+        default: false
     }
 
 },

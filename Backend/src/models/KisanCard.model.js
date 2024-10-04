@@ -2,34 +2,55 @@ import mongoose from "mongoose"
 import { Schema } from "mongoose"
 
 const kisanCardSchema = new Schema({
-    owner: {
-        type: Schema.Types.ObjectId,
-        ref: 'Producer'
-    },
-
-    cardId: {
-        type: Number,
-        required: true,
-        trim: true,
-        unique: true,
-    },
-    // should be a number but need to confirm the length of the KCC num
-    cardNumber: {
+    name: {
         type: String,
         required: true,
+        trim: true
+    },
+
+    address: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    
+    bankName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+
+    bankBranch: {
+        type: String,
+        required: true,
+        trim: true
+    },
+
+    accountNumber: {
+        type: Number,
+        minLength: 11,
+        maxLength: 16,
         unique: true,
-        index: true
+        index: true,
     },
 
     issueDate: {
         type: Date,
-        required: true
+        required: true,
+        trim: true,
     },
 
     expiryDate: {
         type: Date,
         required: true,
+        trim: true
+    },
+
+    verificationStatus: {
+        type: Boolean,
+        default: false,
     }
+
 },
 {
     timestamps: true,
