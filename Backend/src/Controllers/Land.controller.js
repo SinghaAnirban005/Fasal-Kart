@@ -28,7 +28,7 @@ const submitLandDetails = asyncHandler(async(req, res) => {
     
     // Here , we need to decide the way to verify the image with the details provided 
     // then we can provide the response 
-    // For now explicitly we shall define verification as true
+    // For now we explicitly define verification as true
     let status = true
 
     const landDetails = await Land.save({

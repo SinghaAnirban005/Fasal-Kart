@@ -28,10 +28,10 @@ const productSchema = new Schema({
         }
     ],
 
-    rating: {
+    rating: [{
         type: Schema.Types.ObjectId,
         ref: "Rating"
-    },
+    }],
 
     Price: {
         type: Number, 

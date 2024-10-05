@@ -81,7 +81,12 @@ const producerSchema = new Schema({
     verifiedStatus: {
         type: Boolean,
         default: false
-    }
+    },
+
+    rating: [{
+        type: Schema.Types.ObjectId(),
+        ref: 'FRating'       
+    }]
     
 }, 
 {
@@ -105,8 +110,8 @@ producerSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             _id: this._id,
-            email: this.email,
-            username: this.username,
+            phoneNumber: this.phoneNumber,
+            aadhaarNumber: this.aadhaarNumber,
             fullName: this.fullName
         },
         process.env.ACCESS_TOKEN_SECRET,
