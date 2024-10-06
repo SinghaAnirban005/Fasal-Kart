@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Producer } from "../models/Producer.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -23,27 +22,25 @@ const generateAccessAndRefereshTokens = async(userId) => {
 }
 
 const registerFarmer = asyncHandler( async(req, res) => {
-    const { fullName, phoneNumber, aadhaarNumber } = req.body
+   try {
 
-    // intial checks ...
+    const { fullName, phoneNumber, aadhaarNumber, province, Language, password } = req.body
+
     if(!fullName || !aadhaarNumber || !phoneNumber) {
         throw new ApiError(404, "Please enter required fields")
     }
 
-    const { province, Language } = req.body
-    // next check
     if(!province || !Language) {
         throw new ApiError(404, "Please enter required fields")
     }
-    // final check 
-    const { password } = req.body
+
     if(!password) {
-        throw new ApiError(404, "Please set password")
+        throw new ApiError(401, "Please set password")
     }
 
     const existingUser = await Producer.findOne(
         {   
-            $or: [{phoneNumber}, {aadhaarNumber}, {password}]
+            $or: [{phoneNumber}, {aadhaarNumber}]
         }
     )
 
@@ -51,30 +48,37 @@ const registerFarmer = asyncHandler( async(req, res) => {
         throw new ApiError(400, "User already exists")
     }
 
-    const savedUser = await Producer.save({
+    const farmer = await Producer.create({
+        password,
         fullName,
-        aadhaarNumber,
-        phoneNumber,
-        Language,
-        province,
-        password
+        phoneNumber, 
+        aadhaarNumber, 
+        province, 
+        Language, 
     })
 
-    const registeredUser = await Producer.findById(savedUser._id)
-
-    if(!registeredUser) {
-        throw new ApiError(400, "some error occured while trying to register")
+    if(!farmer) {
+        throw new ApiError(400, "Faliled to create document")
     }
 
+    const enrolledFarmer = await Producer.findById(farmer._id).select('-password -refreshToken')
+
+    if(!enrolledFarmer){
+        throw new ApiError(400, "Some error occured while enrolling user")
+    }   
+    
     return res
     .status(200)
     .json(
         new ApiResponse(
             200, 
-            registeredUser,
+            enrolledFarmer,
             "You have succesfully registered"
         )
     )
+   } catch (error) {
+        throw new ApiError(500, error?.message)
+   }
 })
 
 const loginFarmer = asyncHandler(async(req, res) => {
@@ -89,6 +93,7 @@ const loginFarmer = asyncHandler(async(req, res) => {
             $or: [{aadhaarNumber}, {password}]
         }
     )
+    
     if(!isExistingFarmer) {
         throw new ApiError(400, "User doesn't exist")
     }

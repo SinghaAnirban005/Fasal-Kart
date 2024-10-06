@@ -11,14 +11,6 @@ const producerSchema = new Schema({
         trim: true,
         index: true
     },
-    
-    password: {
-        type: String,
-        required: [true, "Please enter password"],
-        trim: true,
-        unique: true,
-        minLength: 6,
-    },
 
     province: [
         {
@@ -64,8 +56,6 @@ const producerSchema = new Schema({
         trim: true,
         required: true,
         index: true,
-        minLength: 12,
-        maxLength: 12
     },
 
     landDetails: {
@@ -86,21 +76,27 @@ const producerSchema = new Schema({
     rating: [{
         type: Schema.Types.ObjectId,
         ref: 'FRating'       
-    }]
+    }],
+
+    password: {
+        type: String,
+        trim: true,
+        required: true,
+        minLength: 6,
+    },
     
 }, 
 {
     timestamps: true
 })
 
-producerSchema.pre("save",async function(next) {
-    if(!this.isModified("password")) {
-        return next()
+producerSchema.pre("save", async function(next) {
+    if (!this.isModified("password")) {
+        return next();
     }
-
-    this.password = await bcrypt.hash(password, 10)
-    next()
-})
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
 producerSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
