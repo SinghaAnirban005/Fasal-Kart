@@ -3,7 +3,6 @@ import { Producer } from "../models/Producer.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { Producer } from "../models/Producer.model.js";
 import jwt from "jsonwebtoken"
 
 const generateAccessAndRefereshTokens = async(userId) => {

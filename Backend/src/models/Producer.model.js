@@ -84,7 +84,7 @@ const producerSchema = new Schema({
     },
 
     rating: [{
-        type: Schema.Types.ObjectId(),
+        type: Schema.Types.ObjectId,
         ref: 'FRating'       
     }]
     
