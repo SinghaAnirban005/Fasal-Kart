@@ -4,8 +4,10 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 
+
 import { validateProducerData } from "../zodValidations/producerZodSchema.js";
 import { validateLoginData } from "../zodValidations/producerLogin.js";
+import { Product } from "../models/Product.model.js";
 
 const generateAccessAndRefereshTokens = async(userId) => {
     try {
@@ -228,5 +230,5 @@ export {
     loginFarmer,
     logoutFarmer,
     refreshAccessToken,
-    getCurrentFarmer
+    getCurrentFarmer,
 }

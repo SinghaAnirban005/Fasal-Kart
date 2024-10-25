@@ -6,7 +6,7 @@ import {
     loginFarmer,
     logoutFarmer,
     refreshAccessToken,
-    getCurrentFarmer
+    getCurrentFarmer,
 } from "../Controllers/Producer.controller.js"
 
 const router = Router()
@@ -17,6 +17,5 @@ router.route('/signInFarmer').post(loginFarmer)
 router.route('/logoutFarmer').post(verifyJWT, logoutFarmer)
 router.route('/f-refresh-token').post(verifyJWT, refreshAccessToken)
 router.route('/get-FInfo').get(verifyJWT, getCurrentFarmer)
-
 
 export default router 

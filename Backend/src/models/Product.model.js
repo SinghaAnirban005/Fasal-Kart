@@ -14,7 +14,7 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Producer",
     },
-    // TODO :: Necessary in order to ease out sorting of producrts on consumer's POV but farmer's POV would give slight challenges
+    // TODO :: Necessary in order to ease out sorting of products on consumer's POV but farmer's POV would give slight challenges
     Category: {
         type: String,
         trim: true,
@@ -36,7 +36,7 @@ const productSchema = new Schema({
         type: Number, 
         required: true,
         trim: true,
-        minValue: 0
+        minValue: 1
     },
     
     Quantity: {
@@ -47,13 +47,11 @@ const productSchema = new Schema({
 
     quantitySold: {
         type: Number,
-        required: true,
         minValue: 0,
     },
 
     marketPrice: {
         type: Number,
-        required: true,
         minValue: 0,
         index: true
     }

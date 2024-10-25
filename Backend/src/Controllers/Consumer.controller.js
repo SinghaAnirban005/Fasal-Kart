@@ -218,6 +218,8 @@ const getCurrentConsumer = asyncHandler(async(req, res) => {
 })
 
 
+
+
 export {
     registerConsumer,
     loginConsumer,
