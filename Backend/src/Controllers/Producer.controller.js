@@ -4,6 +4,9 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 
+import { validateProducerData } from "../zodValidations/producerZodSchema.js";
+import { validateLoginData } from "../zodValidations/producerLogin.js";
+
 const generateAccessAndRefereshTokens = async(userId) => {
     try {
         const user = await Producer.findById(userId)
@@ -24,9 +27,11 @@ const generateAccessAndRefereshTokens = async(userId) => {
 const registerFarmer = asyncHandler( async(req, res) => {
    try {
 
-    const { fullName, phoneNumber, aadhaarNumber, province, Language, password } = req.body
+    const { fullName, phoneNumber, province, Language, password } = req.body
 
-    if(!fullName || !aadhaarNumber || !phoneNumber) {
+    const validatedData = (req.body)
+
+    if(!fullName || !phoneNumber) {
         throw new ApiError(404, "Please enter required fields")
     }
 
@@ -39,23 +44,16 @@ const registerFarmer = asyncHandler( async(req, res) => {
     }
 
     const existingUser = await Producer.findOne(
-        {   
-            $or: [{phoneNumber}, {aadhaarNumber}]
-        }
+       {
+        phoneNumber: phoneNumber
+       }
     )
 
     if(existingUser) {
-        throw new ApiError(400, "User already exists")
+        throw new ApiError(400, "User account already exists")
     }
 
-    const farmer = await Producer.create({
-        password,
-        fullName,
-        phoneNumber, 
-        aadhaarNumber, 
-        province, 
-        Language, 
-    })
+    const farmer = await Producer.create(validatedData)
 
     if(!farmer) {
         throw new ApiError(400, "Faliled to create document")
@@ -82,15 +80,18 @@ const registerFarmer = asyncHandler( async(req, res) => {
 })
 
 const loginFarmer = asyncHandler(async(req, res) => {
-    const { aadhaarNumber, password } = req.body
+    try {
+        const { phoneNumber, password } = req.body
 
-    if(!aadhaarNumber || !password) {
+    const validatedData = validateLoginData(req.body)
+    
+    if(!phoneNumber || !password) {
         throw new ApiError(400, "Please enter all fields")
     }
 
     const isExistingFarmer = await Producer.findOne(
         {
-            $or: [{aadhaarNumber}, {password}]
+            $or: [{phoneNumber}, {password}]
         }
     )
     
@@ -123,11 +124,16 @@ const loginFarmer = asyncHandler(async(req, res) => {
         new ApiResponse(
             200,
             {
-                farmer: loggedInFarmer, accessToken, refreshToken
+                farmer: loggedInFarmer, 
+                accessToken: accessToken,
+                refreshToken: refreshToken
             },
             "Succesfully logged in !!"
         )
     )
+    } catch (error) {
+        throw new ApiError(500, error?.message)
+    }
 })
 
 

@@ -1,5 +1,7 @@
 import mongoose from "mongoose"
 import { Schema } from "mongoose"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
 const consumerSchema = new Schema({
     
@@ -10,11 +12,18 @@ const consumerSchema = new Schema({
         index: true
     },
 
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        minLength: 6,
+        maxLength: 12
+    },
+
     password: {
         type: String,
-        required: [true, "Please enter password"],
+        required: true,
         trim: true,
-        unique: true,
         minLength: 6,
     },
 
@@ -26,8 +35,18 @@ const consumerSchema = new Schema({
         index: true
     },
 
+    profilePic: {
+        type: String,
+        required: true
+    },
+
     refreshToken: {
         type: String,
+    },
+
+    province: {
+        type: String,
+        required: true,
     },
 
     Cart: [
@@ -69,7 +88,7 @@ consumerSchema.pre("save", async function(next) {
         return next()
     }
 
-    this.password = await bcrypt.hash(password, 10)
+    this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 
@@ -82,7 +101,7 @@ consumerSchema.methods.generateAccessToken = function(){
         {
             _id: this._id,
             email: this.email,
-            fullName: this.fullName,
+            username: this.username,
             phoneNumber: this.phoneNumber
         },
         process.env.ACCESS_TOKEN_SECRET,

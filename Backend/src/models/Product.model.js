@@ -10,7 +10,6 @@ const productSchema = new Schema({
         index: true,
     },
     
-
     Owner: {
         type: Schema.Types.ObjectId,
         ref: "Producer",
@@ -58,7 +57,7 @@ const productSchema = new Schema({
         minValue: 0,
         index: true
     }
-    
+
 },
 {
     timestamps: true,

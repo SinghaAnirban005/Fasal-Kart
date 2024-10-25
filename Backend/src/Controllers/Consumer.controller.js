@@ -4,6 +4,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Consumer } from "../models/Consumer.model.js";
 import jwt from "jsonwebtoken"
 
+import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { validateConsumerData } from "../zodValidations/consumerZodSchema.js";
+import { validateLoginData } from "../zodValidations/consumerLogin.js";
 
 const generateAccessAndRefereshTokens = async(userId) => {
     try {
@@ -18,27 +21,36 @@ const generateAccessAndRefereshTokens = async(userId) => {
 
 
     } catch (error) {
+        console.log(error)
         throw new ApiError(500, "Something went wrong while generating referesh and access token")
     }
 }
 
 const registerConsumer = asyncHandler( async(req, res) => {
    
-    const { fullName, email, phoneNumber } = req.body
+    const { fullName ,username, email, province, password, phoneNumber } = req.body
 
-    if(!fullName || !email || !phoneNumber) {
+    if(!fullName || !email || !province || !username || !phoneNumber) {
         throw new ApiError(400, "Please enter required fields")
     }
-
-    const {password} = req.body
 
     if(!password) {
         throw new ApiError(400, "Please enter password")
     }
 
+    const validatedData = validateConsumerData(req.body)
+
+    const avatarLocalPath = req.file?.path
+    
+    const avatar = await uploadOnCloudinary(avatarLocalPath)
+
+    if(!avatar) {
+        throw new ApiError(400, "Failed to upload avatar")
+    }
+
     const existingUser = await Consumer.findOne(
         {   
-            $or: [{phoneNumber}, {email}, {password}]
+            $or: [ {phoneNumber}, {email} ]
         }
     )
 
@@ -46,16 +58,12 @@ const registerConsumer = asyncHandler( async(req, res) => {
         throw new ApiError(400, "User already exists")
     }
 
-    const savedUser = await Consumer.save({
-        fullName,
-        email,
-        phoneNumber,
-        Cart,
-        province,
-        password
+    const savedUser = await Consumer.create({
+        ...validatedData,
+        profilePic: avatar?.url
     })
 
-    const registeredUser = await Consumer.findById(savedUser._id)
+    const registeredUser = await Consumer.findById(savedUser._id).select('-password -refreshToken')
 
     if(!registeredUser) {
         throw new ApiError(400, "some error occured while trying to register")
@@ -74,7 +82,7 @@ const registerConsumer = asyncHandler( async(req, res) => {
 
 
 const loginConsumer = asyncHandler(async(req, res) => {
-    const { email, password } = req.body
+    const { email, password } = validateLoginData(req.body)
 
     if(!email || !password) {
         throw new ApiError(400, "Please enter all fields")
@@ -82,7 +90,7 @@ const loginConsumer = asyncHandler(async(req, res) => {
 
     const isExistingConsumer = await Consumer.findOne(
         {
-            $or: [{email}, {password}]
+            email: email
         }
     )
     if(!isExistingConsumer) {
@@ -194,6 +202,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     }
 })
 
+
 const getCurrentConsumer = asyncHandler(async(req, res) => {
 
     return res
@@ -202,7 +211,7 @@ const getCurrentConsumer = asyncHandler(async(req, res) => {
         new ApiResponse(
             200,
             req.consumer,
-            "Successfully retrieved farmer details"
+            "Successfully retrieved consumer details"
         )
     )
 
@@ -213,5 +222,6 @@ export {
     registerConsumer,
     loginConsumer,
     logoutConsumer,
-    refreshAccessToken
+    refreshAccessToken,
+    getCurrentConsumer
 }

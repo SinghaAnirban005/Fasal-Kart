@@ -12,11 +12,9 @@ const producerSchema = new Schema({
         index: true
     },
 
-    province: [
-        {
+    province: {
             type: String,
-        }
-    ],
+        },
 
     phoneNumber: {
         type: Number,
@@ -26,9 +24,9 @@ const producerSchema = new Schema({
     },
 
     Language: {
-            type: [String],
+            type: String,
             required: true,
-            default: ["English"],
+            default: "English",
     },
 
     Stock: [
@@ -43,35 +41,36 @@ const producerSchema = new Schema({
     },
 
     // Considering the case that each farmer would get reels based on their location 
-    Reels: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Video",
-        }
-    ],
+    // But for now we shall keep it common for all 
+    // Reels: [
+    //     {
+    //         type: Schema.Types.ObjectId,
+    //         ref: "Video",
+    //     }
+    // ],
 
-    aadhaarNumber: {
-        type: Number,
-        unique: true,
-        trim: true,
-        required: true,
-        index: true,
-    },
+    // aadhaarNumber: {
+    //     type: Number,
+    //     unique: true,
+    //     trim: true,
+    //     required: true,
+    //     index: true,
+    // },
 
-    landDetails: {
-        type: Schema.Types.ObjectId,
-        ref: "Land"
-    },
+    // landDetails: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Land"
+    // },
 
-    cardDetails: {
-        type: Schema.Types.ObjectId,
-        ref: "KisanCard"
-    },
+    // cardDetails: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "KisanCard"
+    // },
 
-    verifiedStatus: {
-        type: Boolean,
-        default: false
-    },
+    // verifiedStatus: {
+    //     type: Boolean,
+    //     default: false
+    // },
 
     rating: [{
         type: Schema.Types.ObjectId,
@@ -106,9 +105,7 @@ producerSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             _id: this._id,
-            phoneNumber: this.phoneNumber,
-            aadhaarNumber: this.aadhaarNumber,
-            fullName: this.fullName
+            phoneNumber: this.phoneNumber
         },
         process.env.ACCESS_TOKEN_SECRET,
         {

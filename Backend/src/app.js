@@ -15,9 +15,9 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 import farmerRouter from "./Routes/Producer.routes.js"
-import landRouter from "./Routes/Land.routes.js"
+import consumerRouter from "./Routes/Consumer.routes.js"
 
 app.use('/api/v1/producer', farmerRouter)
-app.use('/api/v1/land', landRouter)
+app.use('/api/v1/consumer', consumerRouter)
 
 export {app}

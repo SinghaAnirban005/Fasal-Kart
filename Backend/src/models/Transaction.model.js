@@ -32,12 +32,10 @@ const transactionSchema = new Schema({
         minValue: 0
     },
 
-    paymentMethod: [
-        {
+    paymentMethod: {
             type: String,
             required: true
-        }
-    ],
+    },
 
     paymentStatus: {
         type: String,
