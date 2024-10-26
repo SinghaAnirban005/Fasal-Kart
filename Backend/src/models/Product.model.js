@@ -20,6 +20,10 @@ const productSchema = new Schema({
         trim: true,
     },
 
+    image: {
+        type: String,
+    },  
+
     orderedBy: [
         {
             type: Schema.Types.ObjectId,
